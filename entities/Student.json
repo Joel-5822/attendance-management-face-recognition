@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "roll_number": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "semester": {
+      "type": "string"
+    },
+    "face_descriptor": {
+      "type": "string"
+    },
+    "face_image_url": {
+      "type": "string"
+    },
+    "enrolled": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "name": "Student"
+}
