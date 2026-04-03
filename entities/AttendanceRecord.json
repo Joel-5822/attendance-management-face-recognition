@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "roll_number": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Present",
+        "Absent",
+        "Late"
+      ]
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "marked_by": {
+      "type": "string",
+      "enum": [
+        "Face Recognition",
+        "Manual"
+      ]
+    }
+  },
+  "required": [],
+  "name": "AttendanceRecord"
+}
