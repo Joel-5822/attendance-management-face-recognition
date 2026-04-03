@@ -6,13 +6,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex flex-col items-center justify-center p-6">
-      {/* Animated background blobs */}
+      {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      <div className="relative z-10 text-center mb-12">
+      <div className="relative z-10 text-center mb-10">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-blue-500/30">
             <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,69 +22,53 @@ export default function Home() {
           </div>
           <div>
             <h1 className="text-4xl font-bold text-white tracking-tight">FaceAttend</h1>
-            <p className="text-blue-400 text-sm font-medium tracking-widest uppercase">AI-Powered Attendance System</p>
+            <p className="text-blue-400 text-sm font-medium tracking-widest uppercase">AI-Powered Classroom Attendance</p>
           </div>
         </div>
-        <p className="text-slate-400 text-lg max-w-md mx-auto mt-4">
-          Real-time contactless attendance using deep learning face recognition from classroom video
+        <p className="text-slate-400 text-lg max-w-lg mx-auto mt-3">
+          Upload a single classroom video — the system detects every student including those at the backmost bench and marks attendance automatically.
         </p>
       </div>
 
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full">
+      {/* Main cards */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl w-full mb-8">
         {[
           {
-            icon: (
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
-            ),
+            icon: "👤",
             title: "Enroll Students",
-            desc: "Register students with live webcam face capture — builds a face descriptor database using FaceNet embeddings",
+            desc: "Register each student's face once — via 20-sample webcam capture or 15–25 photo upload. Creates a robust 128-dim ResNet-34 embedding.",
             color: "from-emerald-500 to-teal-600",
             shadow: "shadow-emerald-500/20",
             route: "/enroll",
-            badge: "Phase 1"
+            badge: "Phase 1 · One-time Setup"
           },
           {
-            icon: (
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.069A1 1 0 0121 8.876V15.124a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
-              </svg>
-            ),
+            icon: "🎬",
             title: "Mark Attendance",
-            desc: "Upload or stream classroom video — system detects all faces simultaneously and marks attendance automatically",
+            desc: "Upload a classroom video recorded from the front. The system samples every frame, upscales for back-bench faces, and marks attendance automatically.",
             color: "from-blue-500 to-indigo-600",
             shadow: "shadow-blue-500/20",
             route: "/attendance",
-            badge: "Phase 2"
+            badge: "Phase 2 · Every Class"
           },
           {
-            icon: (
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            ),
-            title: "Reports & Analytics",
-            desc: "View session-wise attendance, export reports, track student attendance percentage over time",
+            icon: "📊",
+            title: "Reports",
+            desc: "Session-wise attendance register, per-student percentage, CSV export, and 75% threshold alerts.",
             color: "from-purple-500 to-pink-600",
             shadow: "shadow-purple-500/20",
             route: "/dashboard",
             badge: "Analytics"
           }
         ].map((card) => (
-          <button
-            key={card.route}
-            onClick={() => navigate(card.route)}
-            className={`group bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 text-left hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:border-white/20 shadow-xl ${card.shadow}`}
-          >
-            <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
-              {card.icon}
-            </div>
+          <button key={card.route} onClick={() => navigate(card.route)}
+            className={`group bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 text-left hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:border-white/20 shadow-xl ${card.shadow}`}>
+            <div className="text-4xl mb-4">{card.icon}</div>
             <span className={`text-xs font-bold uppercase tracking-widest bg-gradient-to-r ${card.color} bg-clip-text text-transparent`}>{card.badge}</span>
             <h2 className="text-white text-xl font-bold mt-1 mb-2">{card.title}</h2>
             <p className="text-slate-400 text-sm leading-relaxed">{card.desc}</p>
             <div className="mt-4 flex items-center gap-2 text-slate-500 group-hover:text-slate-300 transition-colors">
-              <span className="text-sm">Get started</span>
+              <span className="text-sm">Open</span>
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -93,17 +77,22 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="relative z-10 mt-10 flex gap-8 text-center">
-        {[
-          { label: "Algorithm", value: "face-api.js (TinyFaceDetector + FaceNet)" },
-          { label: "Mode", value: "Real-time Video + Upload" },
-          { label: "Privacy", value: "On-device Processing" }
-        ].map(item => (
-          <div key={item.label}>
-            <div className="text-slate-500 text-xs uppercase tracking-wider">{item.label}</div>
-            <div className="text-slate-300 text-sm font-medium mt-1">{item.value}</div>
-          </div>
-        ))}
+      {/* Tech specs strip */}
+      <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 max-w-4xl w-full">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+          {[
+            { label: "Detector", value: "SSD MobileNet V1", sub: "minConf: 0.3" },
+            { label: "Recognition", value: "ResNet-34 FaceNet", sub: "128-dim L2-normalized" },
+            { label: "Back-bench mode", value: "2× upscale + CLAHE", sub: "per-frame enhancement" },
+            { label: "Processing", value: "3 frames/sec", sub: "in-browser, no cloud" },
+          ].map(item => (
+            <div key={item.label}>
+              <div className="text-slate-500 text-xs uppercase tracking-wider">{item.label}</div>
+              <div className="text-slate-200 font-semibold mt-0.5">{item.value}</div>
+              <div className="text-slate-500 text-xs">{item.sub}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
