@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "session_name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "semester": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "time_slot": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Completed",
+        "Cancelled"
+      ]
+    },
+    "total_students": {
+      "type": "number"
+    },
+    "present_count": {
+      "type": "number"
+    },
+    "video_processed": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "name": "AttendanceSession"
+}
