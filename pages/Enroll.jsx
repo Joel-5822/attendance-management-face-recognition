@@ -53,6 +53,21 @@ function l2Normalize(descriptor) {
   return descriptor.map(v => v / (norm + 1e-10));
 }
 
+
+// Resize image to small thumbnail to keep DB payload tiny (~3KB)
+function makeThumb(sourceCanvas, size = 96) {
+  const thumb = document.createElement("canvas");
+  thumb.width = size;
+  thumb.height = size;
+  const ctx = thumb.getContext("2d");
+  // crop to square from center
+  const s = Math.min(sourceCanvas.width, sourceCanvas.height);
+  const sx = (sourceCanvas.width - s) / 2;
+  const sy = (sourceCanvas.height - s) / 2;
+  ctx.drawImage(sourceCanvas, sx, sy, s, s, 0, 0, size, size);
+  return thumb.toDataURL("image/jpeg", 0.7);
+}
+
 export default function Enroll() {
   const navigate = useNavigate();
   const videoRef = useRef(null);
@@ -212,12 +227,12 @@ export default function Enroll() {
       if (newCount >= TARGET_SAMPLES) {
         const avgDesc = averageDescriptors(updated);
         const normalizedDesc = l2Normalize(avgDesc);
-        // Capture best-quality profile image
+        // Capture thumbnail (96x96) — keeps DB payload tiny
         const captureCanvas = document.createElement("canvas");
         captureCanvas.width = video.videoWidth;
         captureCanvas.height = video.videoHeight;
         captureCanvas.getContext("2d").drawImage(video, 0, 0);
-        const imageUrl = captureCanvas.toDataURL("image/jpeg", 0.9);
+        const imageUrl = makeThumb(captureCanvas, 96);
         setCapturedDescriptor(normalizedDesc);
         setCapturedImageUrl(imageUrl);
         setAutoCapture(false);
@@ -308,7 +323,7 @@ export default function Enroll() {
           const desc = Array.from(detection.descriptor);
           successDescriptors.push(desc);
           updatedPhotos[i] = { ...updatedPhotos[i], status: "success", descriptor: desc };
-          if (!profileImage) profileImage = uploadedPhotos[i].url;
+          if (!profileImage) profileImage = makeThumb(offscreen, 96);
           setSuccessCount(s => s + 1);
         } else {
           updatedPhotos[i] = { ...updatedPhotos[i], status: "failed", errorMsg: "No face detected" };
@@ -345,14 +360,21 @@ export default function Enroll() {
     setSaving(true);
     setError("");
     try {
-      const sampleCount = enrollMode === "upload" ? successCount : TARGET_SAMPLES;
+      // Descriptor: 128 floats rounded to 6dp to reduce string size
+      const compactDescriptor = capturedDescriptor.map(v => Math.round(v * 1e6) / 1e6);
+      // face_image_url: should already be a thumbnail, but enforce it
+      const thumbUrl = capturedImageUrl && capturedImageUrl.startsWith("data:")
+        ? (capturedImageUrl.length > 20000
+            ? capturedImageUrl.substring(0, 20000)  // hard cap
+            : capturedImageUrl)
+        : null;
       await Student.create({
         name: form.name,
         roll_number: form.roll_number,
         department: form.department,
         semester: form.semester,
-        face_descriptor: JSON.stringify(capturedDescriptor),
-        face_image_url: capturedImageUrl,
+        face_descriptor: JSON.stringify(compactDescriptor),
+        face_image_url: thumbUrl,
         enrolled: true,
         student_id: `${form.department.slice(0, 3).toUpperCase()}-${form.roll_number}`
       });
@@ -371,7 +393,7 @@ export default function Enroll() {
         setForm({ name: "", roll_number: "", department: "Computer Science", semester: "3rd" });
       }, 2500);
     } catch (e) {
-      setError("Failed to save student. Try again.");
+      setError("Save failed: " + (e?.message || "Network error. Check console and try again."));
     }
     setSaving(false);
   };
